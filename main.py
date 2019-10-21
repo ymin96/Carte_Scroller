@@ -1,3 +1,3 @@
 from Scroller import *
 scroller = Scroller()
-scroller.run()
+scroller.kunsan_uni()

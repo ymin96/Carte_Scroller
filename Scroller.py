@@ -8,8 +8,16 @@ import pymysql
 class Scroller:
 
     def __init__(self):
-        self.db = pymysql.connect(host='211.33.245.179', port=3307, user='ymin96', passwd='dlflrh18', db='about_time',
+        self.conn = pymysql.connect(host='211.33.245.179', port=3307, user='ymin96', passwd='dlflrh18', db='about_time',
                                   autocommit=True)
+
+    def addUniversity(self, university):
+        curs = self.conn.cursor()
+        sql = "delete from Carte where title = %s"
+        curs.execute(sql,(university.title))
+        for carte in university.cartes:
+            sql = "insert into Carte(title, day, breakfast, lunch, supper) values (%s, %s, %s, %s, %s)"
+            curs.execute(sql,(university.title, carte.day, carte.breakfast, carte.lunch, carte.supper))
 
     def kunsan_uni(self):
         url = "http://www.kunsan.ac.kr/dormi/index.kunsan?menuCd=DOM_000000704006000000"
@@ -45,12 +53,15 @@ class Scroller:
             carte = Carte(day[i], breakfast[i], lunch[i], supper[i])
             kunsan.addCarte(carte)
 
-        print(kunsan)
+        self.addUniversity(kunsan)
+
 
     def run(self):
-        cursor = self.db.cursor()
+        cursor = self.conn.cursor()
         cursor.execute("SELECT VERSION()")
         data = cursor.fetchone()
 
         print("Database version : %s " % data)
-        self.db.close()
+        self.conn.close()
+
+
