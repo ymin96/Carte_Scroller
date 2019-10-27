@@ -24,39 +24,40 @@ class Scroller:
     def kunsan_uni(self):
         print('start kunsan_university')
         try:
-            url = "http://www.kunsan.ac.kr/dormi/index.kunsan?menuCd=DOM_000000704006000000"
-            page = urlopen(url)
-            soup = BeautifulSoup(page, "html.parser")
+            while(True):
+                url = "http://www.kunsan.ac.kr/dormi/index.kunsan?menuCd=DOM_000000704006000000"
+                page = urlopen(url)
+                soup = BeautifulSoup(page, "html.parser")
 
-            ctable = soup.find_all('table', 'ctable01')[1]
-            thead = ctable.find('thead')
-            day = thead.find_all('th')
-            del (day[0])
-            for i in range(0, len(day)):
-                temp = day[i].get_text().split('\n')
-                day[i] = temp[1] + ',' + temp[2]
+                ctable = soup.find_all('table', 'ctable01')[1]
+                thead = ctable.find('thead')
+                day = thead.find_all('th')
+                del (day[0])
+                for i in range(0, len(day)):
+                    temp = day[i].get_text().split('\n')
+                    day[i] = temp[1] + ',' + temp[2]
 
-            tbody = ctable.find('tbody')
+                tbody = ctable.find('tbody')
 
-            breakfast_t = tbody.find_all('tr')[0]
-            lunch_t = tbody.find_all('tr')[1]
-            supper_t = tbody.find_all('tr')[2]
+                breakfast_t = tbody.find_all('tr')[0]
+                lunch_t = tbody.find_all('tr')[1]
+                supper_t = tbody.find_all('tr')[2]
 
-            breakfast = []
-            lunch = []
-            supper = []
-            for i in breakfast_t.find_all('td'):
-                breakfast.append(i.get_text().strip().replace(' ', '<br>'))
-            for i in lunch_t.find_all('td'):
-                lunch.append(i.get_text().strip().replace(' ', '<br>'))
-            for i in supper_t.find_all('td'):
-                supper.append(i.get_text().strip().replace(' ', '<br>'))
+                breakfast = []
+                lunch = []
+                supper = []
+                for i in breakfast_t.find_all('td'):
+                    breakfast.append(i.get_text().strip().replace(' ', '<br>'))
+                for i in lunch_t.find_all('td'):
+                    lunch.append(i.get_text().strip().replace(' ', '<br>'))
+                for i in supper_t.find_all('td'):
+                    supper.append(i.get_text().strip().replace(' ', '<br>'))
 
-            kunsan = University('군산대학교')
-            for i in range(7):
-                carte = Carte(day[i], breakfast[i], lunch[i], supper[i], i)
-                kunsan.addCarte(carte)
-
+                kunsan = University('군산대학교')
+                for i in range(7):
+                    carte = Carte(day[i], breakfast[i], lunch[i], supper[i], i)
+                    kunsan.addCarte(carte)
+                break
             self.addUniversity(kunsan)
         except BaseException as e:
             print(e)
@@ -100,11 +101,13 @@ class Scroller:
                         soup.find_all('tr')[3].find_all('td')[1].get_text().strip().replace('\t\t\t\t', '<br>'))
                     num.append(i)
                     driver.switch_to_default_content()
+                jeonju = University("전주대학교")
+                for i in range(5):
+                    carte = Carte(day[i],breakfast[i],lunch[i],supper[i],num[i])
+                    jeonju.addCarte(carte)
                 print("finish jeonju_university")
                 break
-            print(breakfast)
-            print(lunch)
-            print(supper)
+            self.addUniversity(jeonju)
         except:
             print('error: retry jeonju_university')
 
