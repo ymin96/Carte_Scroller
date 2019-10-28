@@ -196,4 +196,3 @@ dmypy.json
 .pyre/
 
 venv/
-driver/
