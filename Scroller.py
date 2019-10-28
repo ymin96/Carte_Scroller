@@ -286,7 +286,7 @@ class Scroller:
 
                 wonkwang = University('원광대학교')
                 for i in range(7):
-                    carte = Carte(day,breakfast,lunch,supper,num)
+                    carte = Carte(day[i],breakfast[i],lunch[i],supper[i],num[i])
                     wonkwang.addCarte(carte)
                 self.addUniversity(wonkwang)
                 break
