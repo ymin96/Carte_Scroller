@@ -19,6 +19,7 @@ class Scroller:
                                     autocommit=True), pool_size=5, max_overflow=0)
         except:
             print("DB connected failed")
+            exit(-1)
 
     # db insert university
     def addUniversity(self, university, conn):
@@ -247,12 +248,18 @@ class Scroller:
                 del day[0]
 
                 for i in range(7):
-                    breakfast.append(
-                        tbody.find_all('tr')[0].find_all('td')[i].get_text().replace("\n", "").replace(" ", "<br>"))
-                    lunch.append(
-                        tbody.find_all('tr')[1].find_all('td')[i].get_text().replace("\n", "").replace(" ", "<br>"))
-                    supper.append(
-                        tbody.find_all('tr')[2].find_all('td')[i].get_text().replace("\n", "").replace(" ", "<br>"))
+                    if tbody.find_all('tr')[0].find_all('td')[i].find('a') is not None:
+                        breakfast.append(tbody.find_all('tr')[0].find_all('td')[i].find('a')['title'].replace(',', '<br>'))
+                    else:
+                        breakfast.append("")
+                    if tbody.find_all('tr')[1].find_all('td')[i].find('a') is not None:
+                        lunch.append(tbody.find_all('tr')[1].find_all('td')[i].find('a')['title'].replace(',', '<br>'))
+                    else:
+                        lunch.append("")
+                    if tbody.find_all('tr')[2].find_all('td')[i].find('a') is not None:
+                        supper.append(tbody.find_all('tr')[2].find_all('td')[i].find('a')['title'].replace(',', '<br>'))
+                    else:
+                        supper.append("")
                     num.append(i)
 
                 jeonbuk = University("전북대학교(특성화캠퍼스)")
