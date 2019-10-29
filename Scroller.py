@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
 from types import *
+from sqlalchemy import pool
 import pymysql
 import time
 import threading
@@ -11,21 +12,27 @@ import threading
 
 class Scroller:
 
-    def __init__(self):
-        self.conn = pymysql.connect(host='211.33.245.179', port=3307, user='ymin96', passwd='dlflrh18', db='about_time',
-                                    autocommit=True)
+    def __init__(self, id, pw):
+        try:
+            self.mypool = pool.QueuePool(
+                lambda: pymysql.connect(host='211.33.245.179', port=3307, user=id, passwd=pw, db='about_time',
+                                    autocommit=True), pool_size=5, max_overflow=0)
+        except:
+            print("DB connected failed")
 
-    #db insert university
-    def addUniversity(self, university):
-        curs = self.conn.cursor()
+    # db insert university
+    def addUniversity(self, university, conn):
+        curs = conn.cursor()
         sql = "delete from Carte where title = %s"
         curs.execute(sql, (university.title))
         for carte in university.cartes:
             sql = "insert into Carte(title, day, breakfast, lunch, supper, num) values (%s, %s, %s, %s, %s, %s)"
             curs.execute(sql, (university.title, carte.day, carte.breakfast, carte.lunch, carte.supper, carte.num))
 
-    #군산대학교
+    # 군산대학교
     def setkunsan_uni(self):
+
+        conn = self.mypool.connect()
         print('start kunsan_university')
         while (True):
             try:
@@ -61,15 +68,18 @@ class Scroller:
                 for i in range(7):
                     carte = Carte(day[i], breakfast[i], lunch[i], supper[i], i)
                     kunsan.addCarte(carte)
-                self.addUniversity(kunsan)
+                self.addUniversity(kunsan, conn)
+                conn.close()
                 break
             except BaseException as e:
                 print("error: " + e)
                 print('retry kunsan_university')
+                time.sleep(1)
         print('finish kunsan_university')
 
-    #전주대학교
+    # 전주대학교
     def setJeonju_uni(self):
+        conn = self.mypool.connect()
         # 크롬 headless 모드 실행
         chrome_option = webdriver.ChromeOptions()
         chrome_option.add_argument('headless')
@@ -112,16 +122,19 @@ class Scroller:
                     carte = Carte(day[i], breakfast[i], lunch[i], supper[i], num[i])
                     jeonju.addCarte(carte)
                 print("finish jeonju_university")
-                self.addUniversity(jeonju)
+                self.addUniversity(jeonju, conn)
+                conn.close()
                 break
             except BaseException as e:
                 print(e)
                 print('retry jeonju_university')
+                time.sleep(1)
 
-    #전북대학교(직영관)
+    # 전북대학교(직영관)
     def setJeonbuk_uni1(self):
+        conn = self.mypool.connect()
         print("start: jeonbuk_university1")
-        while(True):
+        while (True):
             try:
                 url = "https://likehome.jbnu.ac.kr/home/main/inner.php?sMenu=B7100"
                 page = urlopen(url)
@@ -152,17 +165,20 @@ class Scroller:
 
                 jeonbuk = University("전북대학교(직영관)")
                 for i in range(7):
-                    carte = Carte(day[i],breakfast[i],lunch[i],supper[i],num[i])
+                    carte = Carte(day[i], breakfast[i], lunch[i], supper[i], num[i])
                     jeonbuk.addCarte(carte)
-                self.addUniversity(jeonbuk)
+                self.addUniversity(jeonbuk, conn)
+                conn.close()
                 break
             except BaseException as e:
                 print(e)
                 print("retry: jeonbuk_university1")
+                time.sleep(1)
         print("finish: jeonbuk_university1")
 
-    #전북대학교(참빛관)
+    # 전북대학교(참빛관)
     def setJeonbuk_uni2(self):
+        conn = self.mypool.connect()
         print("start: jeonbuk_university2")
         while (True):
             try:
@@ -197,15 +213,18 @@ class Scroller:
                 for i in range(7):
                     carte = Carte(day[i], breakfast[i], lunch[i], supper[i], num[i])
                     jeonbuk.addCarte(carte)
-                self.addUniversity(jeonbuk)
+                self.addUniversity(jeonbuk, conn)
+                conn.close()
                 break
             except BaseException as e:
                 print(e)
                 print("retry: jeonbuk_university2")
+                time.sleep(1)
         print("finish: jeonbuk_university2")
 
-    #전북대학교(특성화캠퍼스)
+    # 전북대학교(특성화캠퍼스)
     def setJeonbuk_uni3(self):
+        conn = self.mypool.connect()
         print("start: jeonbuk_university3")
         while (True):
             try:
@@ -240,27 +259,32 @@ class Scroller:
                 for i in range(7):
                     carte = Carte(day[i], breakfast[i], lunch[i], supper[i], num[i])
                     jeonbuk.addCarte(carte)
-                self.addUniversity(jeonbuk)
+                self.addUniversity(jeonbuk, conn)
+                conn.close()
                 break
             except BaseException as e:
                 print(e)
                 print("retry: jeonbuk_university3")
+                time.sleep(1)
         print("finish: jeonbuk_university3")
 
-    #원광대학교
+    # 원광대학교
     def setWonkwang_uni(self):
+        conn = self.mypool.connect()
         # 크롬 headless 모드 실행
         chrome_option = webdriver.ChromeOptions()
         chrome_option.add_argument('headless')
         chrome_option.add_argument('--disable-gpu')
         chrome_option.add_argument('lang=ko_KR')
         chrome_option.add_argument('--window-size=1920,1080')
+
         print('start: wonkwang_university')
-        while(True):
+        while (True):
             try:
                 driver = webdriver.Chrome("driver/chromedriver", chrome_options=chrome_option)
                 driver.get("https://dorm.wku.ac.kr/?cat=6")
-                driver.find_element_by_tag_name('tbody').find_elements_by_tag_name('tr')[0].find_element_by_tag_name('a').click()
+                driver.find_element_by_tag_name('tbody').find_elements_by_tag_name('tr')[0].find_element_by_tag_name(
+                    'a').click()
 
                 html = driver.page_source
                 driver.close()
@@ -277,36 +301,40 @@ class Scroller:
 
                 for i in range(3):
                     for j in range(7):
-                        temp[i][j] += table.find_all('tr')[(i * 5) + 1].find_all('td')[j + 2].get_text().replace('\xa0','') + '<br>'
+                        temp[i][j] += table.find_all('tr')[(i * 5) + 1].find_all('td')[j + 2].get_text().replace('\xa0',
+                                                                                                                 '') + '<br>'
                         temp[i][j] += table.find_all('tr')[(i * 5) + 2].find_all('td')[j + 1].get_text() + '<br>'
                         temp[i][j] += table.find_all('tr')[(i * 5) + 3].find_all('td')[j + 1].get_text() + '<br>'
                         temp[i][j] += table.find_all('tr')[(i * 5) + 4].find_all('td')[j].get_text() + '<br>'
-                        temp[i][j] += table.find_all('tr')[(i * 5) + 5].find_all('td')[j].get_text().strip().replace('\n/', '<br>').replace('\n', '<br>')
+                        temp[i][j] += table.find_all('tr')[(i * 5) + 5].find_all('td')[j].get_text().strip().replace(
+                            '\n/', '<br>').replace('\n', '<br>')
                 breakfast = temp[0]
                 lunch = temp[1]
                 supper = temp[2]
 
                 wonkwang = University('원광대학교')
                 for i in range(7):
-                    carte = Carte(day[i],breakfast[i],lunch[i],supper[i],num[i])
+                    carte = Carte(day[i], breakfast[i], lunch[i], supper[i], num[i])
                     wonkwang.addCarte(carte)
-                self.addUniversity(wonkwang)
+                self.addUniversity(wonkwang, conn)
+                conn.close()
                 break
             except BaseException as e:
                 print(e)
                 print('retry: wonkwang_university')
+                time.sleep(1)
         print('finish wonkwang_university')
 
     def run(self):
         result = []
-        for attr,val in Scroller.__dict__.items():
+
+        # Scroller 클래스에서 set으로 시작하는 메소드만 추출
+        for attr, val in Scroller.__dict__.items():
             if type(val) == FunctionType and attr[:3] == 'set':
                 result.append(attr)
 
+        # 위에서 추출한 메소드를 스레드로 실행
         for func in result:
             running = getattr(self, func)
             thread = threading.Thread(target=running)
             thread.start()
-            #thread.join()
-
-        #self.conn.close()
