@@ -3,8 +3,10 @@ from University import *
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
+from types import *
 import pymysql
 import time
+import threading
 
 
 class Scroller:
@@ -23,7 +25,7 @@ class Scroller:
             curs.execute(sql, (university.title, carte.day, carte.breakfast, carte.lunch, carte.supper, carte.num))
 
     #군산대학교
-    def kunsan_uni(self):
+    def setkunsan_uni(self):
         print('start kunsan_university')
         while (True):
             try:
@@ -67,7 +69,7 @@ class Scroller:
         print('finish kunsan_university')
 
     #전주대학교
-    def jeonju_uni(self):
+    def setJeonju_uni(self):
         # 크롬 headless 모드 실행
         chrome_option = webdriver.ChromeOptions()
         chrome_option.add_argument('headless')
@@ -117,7 +119,7 @@ class Scroller:
                 print('retry jeonju_university')
 
     #전북대학교(직영관)
-    def jeonbuk_uni1(self):
+    def setJeonbuk_uni1(self):
         print("start: jeonbuk_university1")
         while(True):
             try:
@@ -160,7 +162,7 @@ class Scroller:
         print("finish: jeonbuk_university1")
 
     #전북대학교(참빛관)
-    def jeonbuk_uni2(self):
+    def setJeonbuk_uni2(self):
         print("start: jeonbuk_university2")
         while (True):
             try:
@@ -203,7 +205,7 @@ class Scroller:
         print("finish: jeonbuk_university2")
 
     #전북대학교(특성화캠퍼스)
-    def jeonbuk_uni3(self):
+    def setJeonbuk_uni3(self):
         print("start: jeonbuk_university3")
         while (True):
             try:
@@ -246,7 +248,7 @@ class Scroller:
         print("finish: jeonbuk_university3")
 
     #원광대학교
-    def wonkwang_uni(self):
+    def setWonkwang_uni(self):
         # 크롬 headless 모드 실행
         chrome_option = webdriver.ChromeOptions()
         chrome_option.add_argument('headless')
@@ -296,10 +298,15 @@ class Scroller:
         print('finish wonkwang_university')
 
     def run(self):
-        self.kunsan_uni()
-        self.jeonju_uni()
-        self.jeonbuk_uni1()
-        self.jeonbuk_uni2()
-        self.jeonbuk_uni3()
-        self.wonkwang_uni()
-        self.conn.close()
+        result = []
+        for attr,val in Scroller.__dict__.items():
+            if type(val) == FunctionType and attr[:3] == 'set':
+                result.append(attr)
+
+        for func in result:
+            running = getattr(self, func)
+            thread = threading.Thread(target=running)
+            thread.start()
+            #thread.join()
+
+        #self.conn.close()
