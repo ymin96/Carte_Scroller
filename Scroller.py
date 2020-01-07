@@ -35,7 +35,7 @@ class Scroller:
 
         conn = self.mypool.connect()
         print('start kunsan_university')
-        while (True):
+        for k in range(10):
             try:
                 url = "http://www.kunsan.ac.kr/dormi/index.kunsan?menuCd=DOM_000000704006000000"
                 page = urlopen(url)
@@ -74,7 +74,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print("error: " + e)
-                print('retry kunsan_university')
+                print('retry kunsan_university('+k+')')
                 time.sleep(1)
         print('finish kunsan_university')
 
@@ -88,7 +88,7 @@ class Scroller:
         chrome_option.add_argument('lang=ko_KR')
         chrome_option.add_argument('--window-size=1920,1080')
         print('start jeonju_university')
-        while (True):
+        for k in range(10):
             try:
                 driver = webdriver.Chrome("driver/chromedriver", chrome_options=chrome_option)
                 driver.get("https://startower.jj.ac.kr/")
@@ -128,14 +128,14 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print('retry jeonju_university')
+                print('retry jeonju_university('+k+')')
                 time.sleep(1)
 
     # 전북대학교(직영관)
     def setJeonbuk_uni1(self):
         conn = self.mypool.connect()
         print("start: jeonbuk_university1")
-        while (True):
+        for k in range(10):
             try:
                 url = "https://likehome.jbnu.ac.kr/home/main/inner.php?sMenu=B7100"
                 page = urlopen(url)
@@ -173,7 +173,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print("retry: jeonbuk_university1")
+                print("retry: jeonbuk_university1("+k+')')
                 time.sleep(1)
         print("finish: jeonbuk_university1")
 
@@ -181,7 +181,7 @@ class Scroller:
     def setJeonbuk_uni2(self):
         conn = self.mypool.connect()
         print("start: jeonbuk_university2")
-        while (True):
+        for k in range(10):
             try:
                 url = "https://likehome.jbnu.ac.kr/home/main/inner.php?sMenu=B7200"
                 page = urlopen(url)
@@ -219,7 +219,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print("retry: jeonbuk_university2")
+                print("retry: jeonbuk_university2("+k+')')
                 time.sleep(1)
         print("finish: jeonbuk_university2")
 
@@ -227,7 +227,7 @@ class Scroller:
     def setJeonbuk_uni3(self):
         conn = self.mypool.connect()
         print("start: jeonbuk_university3")
-        while (True):
+        for k in range(10):
             try:
                 url = "https://likehome.jbnu.ac.kr/home/main/inner.php?sMenu=B7300"
                 page = urlopen(url)
@@ -271,7 +271,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print("retry: jeonbuk_university3")
+                print("retry: jeonbuk_university3("+k+')')
                 time.sleep(1)
         print("finish: jeonbuk_university3")
 
@@ -286,7 +286,7 @@ class Scroller:
         chrome_option.add_argument('--window-size=1920,1080')
 
         print('start: wonkwang_university')
-        while (True):
+        for k in range(10):
             try:
                 driver = webdriver.Chrome("driver/chromedriver", chrome_options=chrome_option)
                 driver.get("https://dorm.wku.ac.kr/?cat=6")
@@ -328,7 +328,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print('retry: wonkwang_university')
+                print('retry: wonkwang_university('+k+')')
                 time.sleep(1)
         print('finish wonkwang_university')
 
