@@ -3,8 +3,10 @@ from University import *
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from types import *
 from sqlalchemy import pool
+from pyvirtualdisplay import Display
 import pymysql
 import time
 import threading
@@ -82,15 +84,18 @@ class Scroller:
     def setJeonju_uni(self):
         conn = self.mypool.connect()
         # 크롬 headless 모드 실행
-        chrome_option = webdriver.ChromeOptions()
-        chrome_option.add_argument('headless')
-        chrome_option.add_argument('--disable-gpu')
-        chrome_option.add_argument('lang=ko_KR')
-        chrome_option.add_argument('--window-size=1920,1080')
+        display = Display(visible=0, size=(1920,1080))
+        display.start()
+
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
         print('start jeonju_university')
         for k in range(10):
             try:
-                driver = webdriver.Chrome("driver/chromedriver", chrome_options=chrome_option)
+                driver = webdriver.Chrome(executable_path="driver/chromedriver_linux", chrome_options=chrome_options)
                 driver.get("https://startower.jj.ac.kr/")
                 time.sleep(1)
                 driver.find_element_by_id("mainframe_childframe_form_DivMenuFrame_DivMainMenu_btn_MainMenu03").click()
@@ -279,16 +284,19 @@ class Scroller:
     def setWonkwang_uni(self):
         conn = self.mypool.connect()
         # 크롬 headless 모드 실행
-        chrome_option = webdriver.ChromeOptions()
-        chrome_option.add_argument('headless')
-        chrome_option.add_argument('--disable-gpu')
-        chrome_option.add_argument('lang=ko_KR')
-        chrome_option.add_argument('--window-size=1920,1080')
+        display = Display(visible=0, size=(1920, 1080))
+        display.start()
+
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
 
         print('start: wonkwang_university')
         for k in range(10):
             try:
-                driver = webdriver.Chrome("driver/chromedriver", chrome_options=chrome_option)
+                driver = webdriver.Chrome(executable_path="driver/chromedriver_linux", chrome_options=chrome_options)
                 driver.get("https://dorm.wku.ac.kr/?cat=6")
                 driver.find_element_by_tag_name('tbody').find_elements_by_tag_name('tr')[0].find_element_by_tag_name(
                     'a').click()
@@ -323,6 +331,7 @@ class Scroller:
                 for i in range(7):
                     carte = Carte(day[i], breakfast[i], lunch[i], supper[i], num[i])
                     wonkwang.addCarte(carte)
+                print('finish wonkwang_university')
                 self.addUniversity(wonkwang, conn)
                 conn.close()
                 break
@@ -330,7 +339,6 @@ class Scroller:
                 print(e)
                 print('retry: wonkwang_university('+str(k)+')')
                 time.sleep(1)
-        print('finish wonkwang_university')
 
     def run(self):
         result = []
