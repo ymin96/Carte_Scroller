@@ -74,7 +74,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print("error: " + e)
-                print('retry kunsan_university('+k+')')
+                print('retry kunsan_university('+str(k)+')')
                 time.sleep(1)
         print('finish kunsan_university')
 
@@ -128,7 +128,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print('retry jeonju_university('+k+')')
+                print('retry jeonju_university('+str(k)+')')
                 time.sleep(1)
 
     # 전북대학교(직영관)
@@ -173,7 +173,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print("retry: jeonbuk_university1("+k+')')
+                print("retry: jeonbuk_university1("+str(k)+')')
                 time.sleep(1)
         print("finish: jeonbuk_university1")
 
@@ -219,7 +219,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print("retry: jeonbuk_university2("+k+')')
+                print("retry: jeonbuk_university2("+str(k)+')')
                 time.sleep(1)
         print("finish: jeonbuk_university2")
 
@@ -271,7 +271,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print("retry: jeonbuk_university3("+k+')')
+                print("retry: jeonbuk_university3("+str(k)+')')
                 time.sleep(1)
         print("finish: jeonbuk_university3")
 
@@ -328,7 +328,7 @@ class Scroller:
                 break
             except BaseException as e:
                 print(e)
-                print('retry: wonkwang_university('+k+')')
+                print('retry: wonkwang_university('+str(k)+')')
                 time.sleep(1)
         print('finish wonkwang_university')
 
