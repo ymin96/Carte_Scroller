@@ -92,10 +92,11 @@ class Scroller:
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--window-size=1920,1080')
         print('start jeonju_university')
         for k in range(10):
             try:
-                driver = webdriver.Chrome(executable_path="driver/chromedriver_linux", chrome_options=chrome_options)
+                driver = webdriver.Chrome(executable_path="./driver/chromedriver_linux", chrome_options=chrome_options)
                 driver.get("https://startower.jj.ac.kr/")
                 time.sleep(1)
                 driver.find_element_by_id("mainframe_childframe_form_DivMenuFrame_DivMainMenu_btn_MainMenu03").click()
@@ -296,7 +297,7 @@ class Scroller:
         print('start: wonkwang_university')
         for k in range(10):
             try:
-                driver = webdriver.Chrome(executable_path="driver/chromedriver_linux", chrome_options=chrome_options)
+                driver = webdriver.Chrome(executable_path="./driver/chromedriver_linux", chrome_options=chrome_options)
                 driver.get("https://dorm.wku.ac.kr/?cat=6")
                 driver.find_element_by_tag_name('tbody').find_elements_by_tag_name('tr')[0].find_element_by_tag_name(
                     'a').click()
