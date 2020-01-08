@@ -112,7 +112,7 @@ class Scroller:
                     breakfast.append(
                         soup.find_all('tr')[0].find_all('td')[1].get_text().strip().replace('\t\t\t\t', '<br>'))
                     lunch.append(
-                        soup.find_all('tr')[2].find_all('td')[1].get_text().strip().replace('\t\t\t\t', '<br>'))
+                        soup.find_all('tr')[1].find_all('td')[1].get_text().strip().replace('\t\t\t\t', '<br>'))
                     supper.append(
                         soup.find_all('tr')[3].find_all('td')[1].get_text().strip().replace('\t\t\t\t', '<br>'))
                     num.append(i)
